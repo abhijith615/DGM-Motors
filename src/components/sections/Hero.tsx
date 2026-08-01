@@ -114,7 +114,10 @@ export function Hero() {
       ref={root}
       id="hero"
       aria-label="Introduction"
-      className="relative min-h-[100svh] w-full overflow-hidden bg-[var(--color-void)] text-white"
+      // `on-dark` is what lets shared components (Button, Magnetic links) sit
+      // on the black hero while the rest of the page is brand gray — without
+      // it the secondary button's --fg would resolve to ink on black.
+      className="on-dark relative min-h-[100svh] w-full overflow-hidden bg-[var(--color-void)] text-white"
     >
       <HeroCanvas />
 

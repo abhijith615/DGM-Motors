@@ -16,12 +16,25 @@ export function ScrollProgress() {
   const rail = useRef<HTMLSpanElement>(null);
   const [active, setActive] = useState(0);
 
+  const root = useRef<HTMLDivElement>(null);
+
   useIsomorphicLayoutEffect(() => {
     const ctx = gsap.context(() => {
       gsap.to(rail.current, {
         scaleY: 1,
         ease: 'none',
         scrollTrigger: { start: 0, end: 'max', scrub: 0.4 },
+      });
+
+      // Hidden while the hero is on screen. The rail is a content-wayfinding
+      // aid, and the hero is a black band in both themes — the page's dark
+      // type would be invisible on it anyway.
+      gsap.set(root.current, { autoAlpha: 0 });
+      ScrollTrigger.create({
+        trigger: '#hero',
+        start: 'bottom 80%',
+        onEnter: () => gsap.to(root.current, { autoAlpha: 1, duration: 0.5 }),
+        onLeaveBack: () => gsap.to(root.current, { autoAlpha: 0, duration: 0.3 }),
       });
 
       // One trigger per section, reporting which is currently in the viewport's
@@ -44,6 +57,7 @@ export function ScrollProgress() {
 
   return (
     <div
+      ref={root}
       aria-hidden
       className="pointer-events-none fixed right-6 top-1/2 z-[450] hidden -translate-y-1/2 flex-col items-center gap-4 xl:flex"
     >

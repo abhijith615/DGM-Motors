@@ -149,6 +149,32 @@ src/
 └─ lib/                   site.ts (all content), gsap.ts, ready.ts, utils.ts
 ```
 
+### Palette
+
+Two brand colours, plus white:
+
+| | | Role |
+|---|---|---|
+| Brand gray | `#A6A6A6` | The page ground. Sections alternate this with white, which is what produces the banded rhythm. |
+| Vivid red | `#E81E26` | Fills, rules, tick marks, the torn band, display-scale accents. |
+| White | `#FFFFFF` | Alternating bands and cards. |
+
+**The one rule that shapes everything:** `#A6A6A6` is a *mid* gray, so it is
+unforgiving.
+
+- Dark text on it tops out around 7.6:1, so the type hierarchy is compressed
+  into `#141414` / `#2B2B2B` / `#3B3B3B` — all of which clear AA.
+- **Vivid red is only 1.86:1 on it.** On a gray ground red may be a fill, a
+  rule, an icon or display-scale type — never small text. Small red labels use
+  `--accent-text` (`#7A0D12`, 4.6:1 on gray, 11:1 on white).
+
+This is the same discipline the reference uses: its red is buttons, tick marks,
+the torn band and big headlines, never body copy.
+
+The hero stays black in both themes. Anything sitting on it — or on a full-bleed
+image overlay — gets the `.on-dark` class, which swaps the text tokens locally so
+one set of component classes works over both the gray page and a photograph.
+
 ### Design system
 
 `globals.css` is organised in three tiers and is the only place colour is defined:
@@ -218,11 +244,12 @@ Other measures:
 
 ### Theme
 
-Dark is the default for everyone; the nav toggle opts into light and persists the
-choice. There is deliberately no `prefers-color-scheme` auto-switch — the volumetric
-hero, metal surfaces and red key light are all built for a black ground, and light is
-a legible alternative rather than an equal twin. A blocking inline script applies the
-stored theme before first paint so there's no flash.
+The gray + red scheme is the brand's designed state, so it is the default for
+everyone; the nav toggle opts into the dark workshop variant and persists the choice.
+There is deliberately no `prefers-color-scheme` auto-switch. A blocking inline script
+applies the stored theme before first paint so there's no flash.
+
+Both themes are verified at **0 AA failures** by the live auditor described above.
 
 ---
 

@@ -93,9 +93,10 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: 'cover',
   // Matches the theme so the mobile browser chrome blends into the page.
+  // Brand gray is the default ground, so it leads.
   themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#a6a6a6' },
     { media: '(prefers-color-scheme: dark)', color: '#08090a' },
-    { media: '(prefers-color-scheme: light)', color: '#f2f3f4' },
   ],
 };
 

@@ -2,8 +2,19 @@
 
 /* ==========================================================================
    DGM MOTORS — DESIGN SYSTEM
-   Industrial minimalism. Swiss grid. Gunmetal + vivid red.
+   Industrial minimalism. Swiss grid. Brand gray + vivid red.
    Tailwind v4 CSS-first config: everything in @theme becomes a utility.
+
+   PALETTE RULE (drives every decision below)
+   ------------------------------------------
+   Brand gray #A6A6A6 is a MID grey, so it is unforgiving:
+     · dark text on it tops out around 7.6:1 — the type hierarchy has to be
+       compressed into #141414 / #2B2B2B / #3B3B3B, all of which clear AA
+     · vivid red #E81E26 is only 1.86:1 on it — so on a gray ground red may be
+       a FILL, a RULE, an ICON or DISPLAY-scale type, but never small text
+   Small red labels therefore use --accent-text (#7A0D12, 4.6:1 on gray,
+   11:1 on white). This is the same discipline the reference uses: its red is
+   buttons, tick marks, the torn band and big headlines — never body copy.
    ========================================================================== */
 
 /* `static` is required, not stylistic: Tailwind v4 only emits theme variables
@@ -13,11 +24,20 @@
    nothing at runtime and every heading silently falls back to system UI. */
 @theme static {
   /* ---- Brand primitives ------------------------------------------------ */
-  --color-red: #e81e26; /* Vivid Red — brand accent, used sparingly */
-  --color-red-hot: #ff3a42; /* Lifted red for glows / hover states */
+  --color-red: #e81e26; /* Vivid Red — fills, rules, icons, display type */
+  --color-red-hot: #ff3a42; /* Lifted red: glows, hover, small text ON DARK */
   --color-red-deep: #a5141a; /* Pressed / shadow red */
-  --color-gray: #a6a6a6; /* Brand gray */
+  --color-red-brick: #7a0d12; /* Small text ON LIGHT — 4.6:1 on brand gray */
+  --color-gray: #a6a6a6; /* Brand gray — the primary ground */
   --color-white: #ffffff;
+
+  /* Tints of the brand gray. The palette is only two colours, so the light
+     theme's depth has to come from stepping the gray rather than from hue. */
+  --color-gray-pale: #ededed;
+  --color-gray-light: #c2c2c2;
+  --color-gray-mid: #b5b5b5;
+  --color-gray-deep: #8f8f8f;
+  --color-ink: #141414; /* Near-black type — reads warmer than pure #000 */
 
   /* Gunmetal ramp — sampled from the DGM monogram (#303D41 / #6D797D) */
   --color-void: #08090a;
@@ -74,12 +94,59 @@
 }
 
 /* ==========================================================================
-   SEMANTIC TOKENS — the dark/light switch
+   SEMANTIC TOKENS — the theme switch
    Components only ever reference these, never the primitives above, so the
    entire site re-themes from this one block.
+
+   LIGHT is the default and the designed state: brand gray ground, white
+   panels, red accents, dark photographic hero — the reference layout.
+   Sections alternate --bg (brand gray) and --bg-raised (white), which is what
+   produces the gray/white banding.
    ========================================================================== */
 
 :root,
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: var(--color-gray); /* #A6A6A6 — the brand gray IS the page */
+  --bg-raised: var(--color-white); /* alternating bands, cards */
+  --bg-panel: var(--color-gray-mid); /* forms, insets sitting on gray */
+  --bg-inset: var(--color-gray-deep);
+
+  /* Translucent ground for the sticky nav. Written as explicit rgb+alpha, NOT
+     as color-mix(… var(--bg) 92%, transparent): mixing against `transparent`
+     interpolates toward transparent *black*, so the bar renders near-black and
+     the ink type inside it drops to ~1:1. */
+  --bg-blur: rgb(166 166 166 / 0.92);
+
+  /* Compressed on purpose — see the palette rule at the top of this file.
+     7.6 / 5.8 / 4.6 : 1 on #A6A6A6, and far more on the white bands. */
+  --fg: var(--color-ink);
+  --fg-muted: #2b2b2b;
+  --fg-subtle: #3b3b3b;
+
+  /* Small red labels. Vivid red is 1.86:1 on brand gray — unusable as text —
+     so labels take the brick red while --color-red keeps every fill, rule,
+     tick and display-scale accent. */
+  --accent-text: var(--color-red-brick);
+
+  --line: rgb(20 20 20 / 0.18);
+  --line-strong: rgb(20 20 20 / 0.34);
+
+  --glass: rgb(255 255 255 / 0.24);
+  --glass-hi: rgb(255 255 255 / 0.45);
+
+  /* Metal sheen used by .surface-metal — light rakes across from top-left.
+     On a gray ground the highlight is white and the shadow is ink. */
+  --sheen-1: rgb(255 255 255 / 0.42);
+  --sheen-2: rgb(20 20 20 / 0.07);
+
+  --grain-opacity: 0.04;
+  /* `difference` works on gray, white AND the dark hero, so the cursor never
+     disappears as it crosses a band boundary. `multiply` would vanish on gray. */
+  --cursor-blend: difference;
+}
+
 :root[data-theme='dark'] {
   color-scheme: dark;
 
@@ -87,17 +154,16 @@
   --bg-raised: var(--color-carbon);
   --bg-panel: var(--color-graphite);
   --bg-inset: #0a0c0d;
+  --bg-blur: rgb(8 9 10 / 0.9);
 
   --fg: var(--color-white);
   --fg-muted: var(--color-gray);
-  /* 5.9:1 on --bg. The obvious choice here is a dimmer grey, but --fg-subtle is
+  /* 5.9:1 on --bg. The obvious choice is a dimmer grey, but --fg-subtle is
      used almost exclusively for 10px mono labels, which WCAG treats as normal
      text and holds to 4.5:1. */
   --fg-subtle: #868d90;
 
-  /* Brand red is only 4.4:1 on black — fine for the display-scale accents, one
-     notch short for small text. This lifted red carries every red LABEL while
-     --color-red keeps doing the fills, rules and large type. */
+  /* Same rule inverted: red needs LIFTING on black rather than deepening. */
   --accent-text: var(--color-red-hot);
 
   --line: rgb(255 255 255 / 0.09);
@@ -106,7 +172,6 @@
   --glass: rgb(255 255 255 / 0.035);
   --glass-hi: rgb(255 255 255 / 0.07);
 
-  /* Metal sheen used by .surface-metal — light rakes across from top-left */
   --sheen-1: rgb(255 255 255 / 0.1);
   --sheen-2: rgb(255 255 255 / 0.015);
 
@@ -114,44 +179,43 @@
   --cursor-blend: difference;
 }
 
-:root[data-theme='light'] {
-  color-scheme: light;
+/* Note: there is deliberately no `prefers-color-scheme` auto-switch. The gray
+   + red scheme is the brand's designed state, so it is the default for
+   everyone; the nav toggle opts into the dark workshop variant and the choice
+   persists. Both themes meet AA contrast.
 
-  --bg: #f2f3f4;
-  --bg-raised: #ffffff;
-  --bg-panel: #e9eaec;
-  --bg-inset: #dfe1e3;
+   IMPORTANT: elements that sit on an always-dark surface regardless of theme —
+   the hero, image overlays, the lightbox backdrop — must NOT use --accent-text
+   or --fg. They are pinned to --color-red-hot / white via .on-dark below. */
 
-  --fg: #0d0f11;
-  --fg-muted: #545c60;
-  --fg-subtle: #5f6669; /* 5.3:1 on --bg */
-
-  /* Mirror image of the dark theme: on a light ground the brand red is too
-     bright for small text, so labels drop to the deep red instead.
-     NOTE: elements that sit on an always-dark surface regardless of theme —
-     image overlays, the lightbox backdrop — must use --color-red-hot directly,
-     not this token, or they inherit the deep red onto black. */
-  --accent-text: var(--color-red-deep);
-
-  --line: rgb(13 15 17 / 0.12);
-  --line-strong: rgb(13 15 17 / 0.24);
-
-  --glass: rgb(13 15 17 / 0.03);
-  --glass-hi: rgb(13 15 17 / 0.06);
-
-  --sheen-1: rgb(255 255 255 / 0.9);
-  --sheen-2: rgb(13 15 17 / 0.03);
-
-  --grain-opacity: 0.035;
-  --cursor-blend: multiply;
+/* --------------------------------------------------------------------------
+   ALWAYS-DARK CONTEXT
+   The hero and any full-bleed image overlay stay dark in both themes. Anything
+   inside .on-dark gets the dark theme's text tokens locally, so a single set of
+   component classes works over both the gray page and a black photograph.
+   -------------------------------------------------------------------------- */
+.on-dark {
+  --fg: var(--color-white);
+  --fg-muted: var(--color-gray);
+  --fg-subtle: #868d90;
+  --accent-text: var(--color-red-hot);
+  --line: rgb(255 255 255 / 0.12);
+  --line-strong: rgb(255 255 255 / 0.24);
+  color: var(--fg);
 }
 
-/* Note: there is deliberately no `prefers-color-scheme` auto-switch.
-   DGM's identity is a dark, lit workshop — the volumetric hero, the metal
-   surfaces and the red key light are all built for a black ground, and the
-   light theme is a legible alternative rather than an equal twin. Dark is
-   therefore the default for everyone; the nav toggle opts into light and the
-   choice persists. Both themes meet AA contrast. */
+/* The nav starts .on-dark (it floats over the hero) and rejoins the page theme
+   the moment it sticks. Resetting each custom property to `inherit` pulls the
+   value straight back from :root, so this stays correct in BOTH themes without
+   restating either palette. */
+.nav-bar[data-stuck='true'] {
+  --fg: inherit;
+  --fg-muted: inherit;
+  --fg-subtle: inherit;
+  --accent-text: inherit;
+  --line: inherit;
+  --line-strong: inherit;
+}
 
 /* Expose the semantic tokens as Tailwind utilities (bg-surface, text-fg, …) */
 @theme inline {

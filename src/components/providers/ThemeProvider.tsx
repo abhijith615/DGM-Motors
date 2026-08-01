@@ -20,14 +20,14 @@ const STORAGE_KEY = 'dgm-theme';
 export const themeInitScript = `
 (function(){try{
   var s=localStorage.getItem('${STORAGE_KEY}');
-  document.documentElement.setAttribute('data-theme',s==='light'?'light':'dark');
-}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();
+  document.documentElement.setAttribute('data-theme',s==='dark'?'dark':'light');
+}catch(e){document.documentElement.setAttribute('data-theme','light');}})();
 `;
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   // Matches the server-rendered default; corrected in the effect below from
   // whatever themeInitScript already stamped on <html>.
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
     const applied = document.documentElement.getAttribute('data-theme');

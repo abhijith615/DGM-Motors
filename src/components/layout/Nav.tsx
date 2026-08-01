@@ -21,10 +21,26 @@ export function Nav() {
     const el = bar.current;
     if (!el) return;
 
+    // `data-stuck` is LEGIBILITY-CRITICAL, not decoration: unstuck the bar is
+    // .on-dark (light type for the black hero), stuck it rejoins the page
+    // theme (ink type on a gray bar). If it ever failed to flip, the links
+    // would render #A6A6A6 on the #A6A6A6 page — a 1:1 contrast ratio.
+    //
+    // So it runs off a plain passive scroll listener rather than a
+    // ScrollTrigger callback. ScrollTrigger is excellent, but it depends on the
+    // GSAP ticker and the Lenis proxy both running; this needs to be true even
+    // if animation never ticks at all.
+    const setStuck = () => {
+      el.dataset.stuck = window.scrollY > 120 ? 'true' : 'false';
+    };
+
+    setStuck();
+    window.addEventListener('scroll', setStuck, { passive: true });
+
     const ctx = gsap.context(() => {
-      // Slide away when scrolling down, return instantly when scrolling up —
-      // the reading position is never obstructed but the nav is always one
-      // gesture away.
+      // Decorative only: slide away when scrolling down, return when scrolling
+      // up — the reading position is never obstructed but the nav is always one
+      // gesture away. Safe to lose.
       const show = gsap.quickTo(el, 'yPercent', { duration: 0.5, ease: 'expo.out' });
 
       ScrollTrigger.create({
@@ -33,14 +49,13 @@ export function Nav() {
         onUpdate: (self) => {
           show(self.direction === 1 && self.scroll() > 300 ? -110 : 0);
         },
-        onToggle: (self) => {
-          // Solidify the bar once it leaves the hero.
-          el.dataset.stuck = self.isActive ? 'true' : 'false';
-        },
       });
     }, bar);
 
-    return () => ctx.revert();
+    return () => {
+      window.removeEventListener('scroll', setStuck);
+      ctx.revert();
+    };
   }, []);
 
   /* --- mobile panel ------------------------------------------------------ */
@@ -109,10 +124,22 @@ export function Nav() {
         Skip to content
       </a>
 
+      {/*
+        `on-dark` while the bar is over the hero, dropped once it sticks.
+
+        The hero is a black photographic band in BOTH themes, but the rest of
+        the page is brand gray — so a nav that simply used --fg would be dark
+        type on a dark hero at the top of every visit. Toggling the class swaps
+        the whole token set for the subtree instead of colouring each child
+        twice, and the colour transition rides the existing background fade.
+      */}
       <header
         ref={bar}
         data-stuck="false"
-        className="group/nav fixed inset-x-0 top-0 z-[500] transition-colors duration-500 data-[stuck=true]:bg-[color-mix(in_oklab,var(--bg)_78%,transparent)] data-[stuck=true]:backdrop-blur-xl"
+        // --bg-blur is 92% opaque: the stuck bar can sit over the black hero,
+        // the brand gray or a white band while the type inside it is ink, and a
+        // nearly opaque ground makes that one contrast ratio instead of three.
+        className="group/nav nav-bar on-dark fixed inset-x-0 top-0 z-[500] transition-colors duration-500 data-[stuck=true]:bg-[var(--bg-blur)] data-[stuck=true]:backdrop-blur-xl"
       >
         <div className="h-px w-full bg-[var(--line)] opacity-0 transition-opacity duration-500 group-data-[stuck=true]/nav:opacity-100" />
 
