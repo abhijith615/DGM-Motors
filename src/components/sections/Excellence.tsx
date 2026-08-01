@@ -21,18 +21,8 @@ export function Excellence() {
       const mm = gsap.matchMedia();
 
       mm.add('(prefers-reduced-motion: no-preference)', () => {
-        // Image drifts slower than the page. Moving the *inner* element inside
-        // a fixed-height frame means the frame never leaves a gap, which is the
-        // usual failure mode of naive parallax.
-        gsap.fromTo(
-          '[data-parallax-inner]',
-          { yPercent: -12 },
-          {
-            yPercent: 12,
-            ease: 'none',
-            scrollTrigger: { trigger: '[data-parallax-frame]', start: 'top bottom', end: 'bottom top', scrub: true },
-          }
-        );
+        // No parallax on the film: it needs an over-sized inner element to have
+        // travel, and over-sizing is exactly what crops the frame.
 
         // Spec rows tick in like a readout.
         gsap.from('[data-spec-row]', {
@@ -61,14 +51,17 @@ export function Excellence() {
       <div className="shell">
         <SectionHeader index={excellence.index} label={excellence.eyebrow} />
 
-        <div className="grid-swiss mt-14 gap-y-16 md:mt-20">
-          {/* --- headline + body --- */}
-          <div className="col-span-12 lg:col-span-6">
+        {/* Headline and supporting copy share one row; the film then runs the
+            full grid width beneath them. The previous layout put a tall 4:5
+            media column beside a shorter text column, which left a large void
+            under the text on wide screens. */}
+        <div className="grid-swiss mt-14 items-end gap-y-10 md:mt-20">
+          <div className="col-span-12 lg:col-span-7">
             <SplitHeading
               as="h2"
               id="excellence-heading"
               mode="lines"
-              className="t-display text-display text-gradient-steel"
+              className="t-display text-display"
               // Pre-broken so the three statements land as three lines at every
               // width — this is a composition, not a paragraph.
             >
@@ -78,45 +71,37 @@ export function Excellence() {
                 </span>
               ))}
             </SplitHeading>
-
-            <Reveal variant="rise" stagger={0.12} className="mt-10 max-w-[54ch] space-y-6" delay={0.15}>
-              {excellence.body.map((paragraph) => (
-                <p key={paragraph.slice(0, 24)} className="text-lead text-[var(--fg-muted)]">
-                  {paragraph}
-                </p>
-              ))}
-            </Reveal>
           </div>
 
-          {/* --- workshop film --- */}
-          <div className="col-span-12 lg:col-span-5 lg:col-start-8">
-            <Reveal variant="clip" duration={1.5}>
-              <figure
-                data-parallax-frame
-                className="relative aspect-4/5 w-full overflow-hidden rounded-[var(--radius-panel)] border border-[var(--line)]"
-              >
-                {/* Oversized inner so the parallax travel never exposes an edge.
-                    The video fills it via object-cover, so the 16:9 source is
-                    cropped to this 4:5 frame rather than letterboxed. */}
-                <div data-parallax-inner className="absolute inset-x-0 -inset-y-[14%]">
-                  <BackgroundVideo
-                    sources={[{ src: media.excellence.src, poster: media.excellence.poster }]}
-                  />
-                </div>
-
-                {/* Scrim sized for legibility over the footage's bright frames. */}
-                <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-linear-to-t from-black/92 via-black/55 to-transparent p-5 pt-14">
-                  <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-white">
-                    Accident damage, as received
-                  </span>
-                  <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-[var(--color-red-hot)]">
-                    Intake bay
-                  </span>
-                </figcaption>
-              </figure>
-            </Reveal>
-          </div>
+          <Reveal variant="rise" stagger={0.12} className="col-span-12 space-y-6 lg:col-span-5" delay={0.15}>
+            {excellence.body.map((paragraph) => (
+              <p key={paragraph.slice(0, 24)} className="text-lead text-[var(--fg-muted)]">
+                {paragraph}
+              </p>
+            ))}
+          </Reveal>
         </div>
+
+        {/* --- workshop film ---
+            16:9 frame for a 16:9 source, so object-cover fits it exactly and
+            nothing is cropped. There is deliberately no parallax here: the
+            effect requires an over-sized inner element, and over-sizing is what
+            crops the picture. */}
+        <Reveal variant="clip" duration={1.5} className="mt-14 md:mt-20">
+          <figure className="relative aspect-video w-full overflow-hidden rounded-[var(--radius-panel)] border border-[var(--line)]">
+            <BackgroundVideo sources={[{ src: media.excellence.src, poster: media.excellence.poster }]} />
+
+            {/* Scrim sized for legibility over the footage's bright frames. */}
+            <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-linear-to-t from-black/92 via-black/55 to-transparent p-5 pt-14 md:p-7 md:pt-20">
+              <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-white">
+                Accident damage, as received
+              </span>
+              <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-[var(--color-red-hot)]">
+                Intake bay
+              </span>
+            </figcaption>
+          </figure>
+        </Reveal>
 
         {/* --- statistics --- */}
         <div className="mt-24 border-t border-[var(--line)] pt-12 md:mt-32">

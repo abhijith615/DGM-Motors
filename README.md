@@ -104,26 +104,12 @@ does not:
 
 Autoplay rejection (iOS low-power mode) degrades to the poster, not a black box.
 
-## Adding real photography
+## Swapping the service imagery
 
-The site currently renders **generated industrial plates** — art-directed SVG
-compositions (technical line-work, metal gradients, registration marks) drawn from a
-fixed seed. No workshop photography was supplied, and shipping grey boxes or
-hot-linked stock would have undercut the rest of the design.
-
-To swap in real photos:
-
-1. Drop images into `public/workshop/` (recommended: 2000px on the long edge, JPEG/WebP).
-2. Add a `src` to the matching entry in the `plates` array in `src/lib/site.ts`:
-
-```ts
-{ id: 'bay-01', caption: 'Main repair bay', meta: 'Coimbatore · Bay 01',
-  span: 'wide', seed: 11, variant: 'bay',
-  src: '/workshop/bay-01.jpg' },   // ← add this line
-```
-
-`Plate` prefers `src` whenever present. Nothing else changes — parallax, hover zoom,
-the lightbox and `next/image` optimisation all work identically.
+All eight capability cards in section 03 use the supplied stills. To change one,
+drop a new master in `New Creatives/` under the same name, re-run
+`node scripts/generate-media.mjs`, and the path in `services[].image` keeps
+working — the filenames are slugified from the masters.
 
 ---
 
@@ -178,11 +164,10 @@ src/
 │  ├─ sitemap.ts · robots.ts · manifest.ts
 │  └─ icon.png · apple-icon.png
 ├─ components/
-│  ├─ gallery/            Plate (generated imagery), Lightbox
 │  ├─ media/              BackgroundVideo (responsive, lazy, pause-when-unwatched)
 │  ├─ layout/             Nav, Footer, Preloader, Grain, ScrollProgress, TornEdge
 │  ├─ providers/          SmoothScrollProvider (Lenis⟷GSAP), ThemeProvider
-│  ├─ sections/           The eight page sections
+│  ├─ sections/           The seven page sections
 │  ├─ seo/                JSON-LD
 │  └─ ui/                 Button, Magnetic, Cursor, SplitHeading, Reveal, Counter…
 ├─ hooks/

@@ -53,7 +53,7 @@ export function Why() {
       <div className="shell">
         <SectionHeader index="04" label={`Why ${site.name}`} />
 
-        <SplitHeading as="h2" id="why-heading" mode="lines" className="t-display text-display mt-10 max-w-[14ch] text-gradient-steel">
+        <SplitHeading as="h2" id="why-heading" mode="lines" className="t-display text-display mt-10 max-w-[14ch]">
           Reasons that
           <br />
           survive scrutiny.

@@ -5,7 +5,7 @@ export const cn = (...inputs: ClassValue[]) => clsx(inputs);
 export const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
 
 /**
- * Deterministic PRNG. Generated artwork (gallery plates, particle fields) must
+ * Deterministic PRNG. Generated artwork (the torn band, and anything seeded) must
  * produce identical output on server and client or React will scream about a
  * hydration mismatch — so no Math.random anywhere in render.
  */

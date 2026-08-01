@@ -145,7 +145,7 @@ export function Journey() {
           holds the heading would drag it along for ten screens of scroll. */}
       <div className="shell pt-[var(--spacing-section)]">
         <SectionHeader index="02" label="The Repair Journey" />
-        <h2 id="process-heading" className="t-display text-display mt-10 max-w-[16ch] text-gradient-steel">
+        <h2 id="process-heading" className="t-display text-display mt-10 max-w-[16ch]">
           Ten stages.
           <br />
           One standard.

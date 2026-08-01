@@ -3,7 +3,6 @@ import { Excellence } from '@/components/sections/Excellence';
 import { Journey } from '@/components/sections/Journey';
 import { Services } from '@/components/sections/Services';
 import { Why } from '@/components/sections/Why';
-import { Workshop } from '@/components/sections/Workshop';
 import { Testimonials } from '@/components/sections/Testimonials';
 import { Contact } from '@/components/sections/Contact';
 import { TornEdge } from '@/components/layout/TornEdge';
@@ -26,7 +25,6 @@ export default function Home() {
       <Journey />
       <Services />
       <Why />
-      <Workshop />
       <Testimonials />
       <Contact />
     </>

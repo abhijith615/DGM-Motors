@@ -28,7 +28,7 @@ export function Contact() {
         <div className="grid-swiss mt-12 gap-y-16 md:mt-16">
           {/* --- left: statement + details --- */}
           <div className="col-span-12 lg:col-span-5">
-            <SplitHeading as="h2" id="contact-heading" mode="lines" className="t-display text-display text-gradient-steel">
+            <SplitHeading as="h2" id="contact-heading" mode="lines" className="t-display text-display">
               {contact.headline.split('\n').map((line) => (
                 <span key={line} className="block">
                   {line}

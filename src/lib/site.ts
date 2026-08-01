@@ -66,8 +66,7 @@ export const navLinks = [
   { label: 'Process', href: '#process', index: '02' },
   { label: 'Services', href: '#services', index: '03' },
   { label: 'Why DGM', href: '#why', index: '04' },
-  { label: 'Workshop', href: '#workshop', index: '05' },
-  { label: 'Contact', href: '#contact', index: '06' },
+  { label: 'Contact', href: '#contact', index: '05' },
 ] as const;
 
 /* -------------------------------------------------------------------------- */
@@ -350,38 +349,6 @@ export const pillars: Pillar[] = [
   },
 ];
 
-/* -------------------------------------------------------------------------- */
-/* 06 — WORKSHOP GALLERY                                                       */
-/* -------------------------------------------------------------------------- */
-
-/**
- * Each plate renders as a generated industrial composition (see
- * `components/gallery/Plate.tsx`). To use real photography instead, drop a
- * file at `/public/workshop/<id>.jpg` and set `src` — the component prefers
- * `src` whenever it is present.
- */
-export type Plate = {
-  id: string;
-  caption: string;
-  meta: string;
-  /** Masonry weight. */
-  span: 'tall' | 'wide' | 'square';
-  /** Seeds the generated composition so it stays stable between renders. */
-  seed: number;
-  variant: 'chassis' | 'weld' | 'panel' | 'booth' | 'bay' | 'detail';
-  src?: string;
-};
-
-export const plates: Plate[] = [
-  { id: 'bay-01', caption: 'Main repair bay', meta: 'Coimbatore · Bay 01', span: 'wide', seed: 11, variant: 'bay' },
-  { id: 'chassis-01', caption: 'Chassis on the straightening bench', meta: 'Hydraulic bench', span: 'tall', seed: 27, variant: 'chassis' },
-  { id: 'weld-01', caption: 'Structural seam, laid by hand', meta: 'MIG / MAG', span: 'square', seed: 44, variant: 'weld' },
-  { id: 'panel-01', caption: 'Panel forming', meta: 'Body shop', span: 'square', seed: 58, variant: 'panel' },
-  { id: 'booth-01', caption: 'Baked paint booth', meta: '2K polyurethane', span: 'tall', seed: 63, variant: 'booth' },
-  { id: 'detail-01', caption: 'Datum measurement point', meta: '± 1.5 mm', span: 'square', seed: 79, variant: 'detail' },
-  { id: 'bay-02', caption: 'Fabrication bay', meta: 'In-house forming', span: 'wide', seed: 88, variant: 'bay' },
-  { id: 'chassis-02', caption: 'Sub-frame assembly', meta: 'Jig-fitted', span: 'square', seed: 95, variant: 'chassis' },
-];
 
 /* -------------------------------------------------------------------------- */
 /* 07 — TESTIMONIALS                                                           */
@@ -431,7 +398,7 @@ export const testimonials: Testimonial[] = [
 /* -------------------------------------------------------------------------- */
 
 export const contact = {
-  index: '06',
+  index: '05',
   eyebrow: 'Request Inspection',
   headline: "Bring us\nthe damage.",
   body: 'Send the vehicle details and we will respond with an inspection slot, an indicative scope and — where a claim is involved — the documentation you will need.',

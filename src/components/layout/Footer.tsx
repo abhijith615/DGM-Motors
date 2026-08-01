@@ -4,7 +4,6 @@ import { gsap } from '@/lib/gsap';
 import { navLinks, services, site, whatsappUrl } from '@/lib/site';
 import { Logo } from '@/components/ui/Logo';
 import { Magnetic } from '@/components/ui/Magnetic';
-import { Reveal } from '@/components/ui/Reveal';
 
 export function Footer() {
   const toTop = () => {
@@ -114,21 +113,8 @@ export function Footer() {
           </address>
         </div>
 
-        {/* --- oversized wordmark: type as architecture --- */}
-        <Reveal variant="clip" className="mt-20 md:mt-28">
-          <p
-            aria-hidden
-            className="t-display select-none whitespace-nowrap text-[clamp(3.5rem,15.5vw,15rem)] leading-[0.8] tracking-[-0.05em] text-transparent"
-            style={{
-              WebkitTextStroke: '1px var(--line-strong)',
-            }}
-          >
-            DGM MOTORS
-          </p>
-        </Reveal>
-
         {/* --- legal --- */}
-        <div className="mt-14 flex flex-col gap-5 border-t border-[var(--line)] pt-7 md:flex-row md:items-center md:justify-between">
+        <div className="mt-20 flex flex-col gap-5 border-t border-[var(--line)] pt-7 md:mt-28 md:flex-row md:items-center md:justify-between">
           <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-[var(--fg-subtle)]">
             © {new Date().getFullYear()} {site.legalName} · {site.serviceAreas.join(' · ')}
           </p>

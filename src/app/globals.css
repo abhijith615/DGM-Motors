@@ -447,12 +447,6 @@
     backface-visibility: hidden;
   }
 
-  .text-gradient-steel {
-    background: linear-gradient(180deg, var(--fg) 0%, var(--fg) 45%, var(--fg-subtle) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
 
   .glow-red {
     box-shadow:

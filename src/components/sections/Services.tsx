@@ -55,7 +55,7 @@ export function Services() {
         <SectionHeader index="03" label="Capabilities" />
 
         <div className="mt-10 flex flex-col justify-between gap-8 md:flex-row md:items-end">
-          <SplitHeading as="h2" id="services-heading" mode="lines" className="t-display text-display max-w-[13ch] text-gradient-steel">
+          <SplitHeading as="h2" id="services-heading" mode="lines" className="t-display text-display max-w-[13ch]">
             Everything the
             <br />
             vehicle needs.
