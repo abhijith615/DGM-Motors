@@ -3,7 +3,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { gsap, ScrollTrigger } from '@/lib/gsap';
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
-import { useTheme } from '@/components/providers/ThemeProvider';
 import { navLinks, site, whatsappUrl } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/ui/Logo';
@@ -13,7 +12,6 @@ export function Nav() {
   const bar = useRef<HTMLElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const { theme, toggle } = useTheme();
 
   /* --- show / hide on scroll direction ---------------------------------- */
 
@@ -188,7 +186,6 @@ export function Nav() {
           </nav>
 
           <div className="flex items-center gap-2 md:gap-3">
-            <ThemeToggle theme={theme} onToggle={toggle} />
 
             <Magnetic strength={0.25} innerStrength={0.12} className="hidden sm:block">
               <a
@@ -290,43 +287,3 @@ export function Nav() {
   );
 }
 
-/* -------------------------------------------------------------------------- */
-
-function ThemeToggle({ theme, onToggle }: { theme: 'dark' | 'light'; onToggle: () => void }) {
-  return (
-    <Magnetic strength={0.3} innerStrength={0.15}>
-      <button
-        type="button"
-        onClick={onToggle}
-        data-cursor="link"
-        aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-        className="grid h-11 w-11 place-items-center rounded-full border border-[var(--line-strong)] text-[var(--fg-muted)] transition-colors hover:border-[var(--color-red)] hover:text-[var(--fg)]"
-      >
-        {/* A single glyph that rotates between states rather than swapping icons —
-            avoids a layout flash and reads as one object turning over. */}
-        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
-          <circle
-            cx="12"
-            cy="12"
-            r="6"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            className="origin-center transition-transform duration-700 [transition-timing-function:var(--ease-out-expo)]"
-            style={{ transform: theme === 'dark' ? 'scale(0.72)' : 'scale(1)' }}
-          />
-          <path
-            d="M12 1.5v3M12 19.5v3M22.5 12h-3M4.5 12h-3M19.4 4.6l-2.1 2.1M6.7 17.3l-2.1 2.1M19.4 19.4l-2.1-2.1M6.7 6.7 4.6 4.6"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            className="origin-center transition-all duration-700 [transition-timing-function:var(--ease-out-expo)]"
-            style={{
-              opacity: theme === 'light' ? 1 : 0,
-              transform: theme === 'light' ? 'rotate(0deg)' : 'rotate(-90deg) scale(0.5)',
-            }}
-          />
-        </svg>
-      </button>
-    </Magnetic>
-  );
-}

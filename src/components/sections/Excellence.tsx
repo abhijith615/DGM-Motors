@@ -88,19 +88,12 @@ export function Excellence() {
             effect requires an over-sized inner element, and over-sizing is what
             crops the picture. */}
         <Reveal variant="clip" duration={1.5} className="mt-14 md:mt-20">
-          <figure className="relative aspect-video w-full overflow-hidden rounded-[var(--radius-panel)] border border-[var(--line)]">
+          {/* No caption overlay — the footage speaks for itself, and the scrim
+              that made a caption legible was darkening the bottom third of the
+              picture to pay for it. */}
+          <div className="relative aspect-video w-full overflow-hidden rounded-[var(--radius-panel)] border border-[var(--line)]">
             <BackgroundVideo sources={[{ src: media.excellence.src, poster: media.excellence.poster }]} />
-
-            {/* Scrim sized for legibility over the footage's bright frames. */}
-            <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-linear-to-t from-black/92 via-black/55 to-transparent p-5 pt-14 md:p-7 md:pt-20">
-              <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-white">
-                Accident damage, as received
-              </span>
-              <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-[var(--color-red-hot)]">
-                Intake bay
-              </span>
-            </figcaption>
-          </figure>
+          </div>
         </Reveal>
 
         {/* --- statistics --- */}

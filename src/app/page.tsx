@@ -5,23 +5,19 @@ import { Services } from '@/components/sections/Services';
 import { Why } from '@/components/sections/Why';
 import { Testimonials } from '@/components/sections/Testimonials';
 import { Contact } from '@/components/sections/Contact';
-import { TornEdge } from '@/components/layout/TornEdge';
 
 /**
  * Section order is the argument the page makes:
  * hook → credibility → process → capability → proof → evidence → voice → act.
  *
  * Sections alternate --bg (brand gray) and --bg-raised (white), which is what
- * produces the banded rhythm. The torn red band lands once, where the opening
- * gray statement gives way to the process — used sparingly so it stays an
- * event rather than a motif.
+ * produces the banded rhythm.
  */
 export default function Home() {
   return (
     <>
       <Hero />
       <Excellence />
-      <TornEdge />
       <Journey />
       <Services />
       <Why />

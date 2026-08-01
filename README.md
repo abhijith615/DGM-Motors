@@ -12,8 +12,8 @@ Tamil Nadu · Kerala
 
 An immersive, single-page marketing site for a commercial vehicle accident repair
 workshop. Built for scroll-driven storytelling at a sustained 60 FPS, with a
-full-bleed video hero, a pinned horizontal process narrative, and a design system
-that ships both a light (brand gray) and a dark theme.
+full-bleed video hero, a pinned horizontal process narrative, and a single-theme
+design system built on brand gray and vivid red.
 
 ## Stack
 
@@ -170,8 +170,8 @@ src/
 │  └─ icon.png · apple-icon.png
 ├─ components/
 │  ├─ media/              BackgroundVideo (responsive, lazy, pause-when-unwatched)
-│  ├─ layout/             Nav, Footer, Preloader, Grain, ScrollProgress, TornEdge
-│  ├─ providers/          SmoothScrollProvider (Lenis⟷GSAP), ThemeProvider
+│  ├─ layout/             Nav, Footer, Preloader, Grain, ScrollProgress
+│  ├─ providers/          SmoothScrollProvider (Lenis⟷GSAP)
 │  ├─ sections/           The seven page sections
 │  ├─ seo/                JSON-LD
 │  └─ ui/                 Button, Magnetic, Cursor, SplitHeading, Reveal, Counter…
@@ -186,7 +186,7 @@ Two brand colours, plus white:
 | | | Role |
 |---|---|---|
 | Brand gray | `#A6A6A6` | The page ground. Sections alternate this with white, which is what produces the banded rhythm. |
-| Vivid red | `#E81E26` | Fills, rules, tick marks, the torn band, display-scale accents. |
+| Vivid red | `#E81E26` | Fills, rules, tick marks, display-scale accents. |
 | White | `#FFFFFF` | Alternating bands and cards. |
 
 **The one rule that shapes everything:** `#A6A6A6` is a *mid* gray, so it is
@@ -266,12 +266,15 @@ Other measures:
 
 ### Theme
 
-The gray + red scheme is the brand's designed state, so it is the default for
-everyone; the nav toggle opts into the dark workshop variant and persists the choice.
-There is deliberately no `prefers-color-scheme` auto-switch. A blocking inline script
-applies the stored theme before first paint so there's no flash.
+**Single theme.** Gray + red is the brand, so there is no dark variant, no toggle,
+no stored preference and no prefers-color-scheme switch — and therefore no theme
+flash to guard against.
 
-Both themes are verified at **0 AA failures**, across 219 text nodes per theme.
+Do not confuse this with `.on-dark`, which is a *local* context for content sitting
+on the hero or on photography. Those surfaces are dark regardless, so anything
+inside them is pinned to light type and --color-red-hot.
+
+Verified at **0 AA failures** across 219 text nodes.
 
 **When re-auditing, force the scroll-reveals visible first.** Everything below the
 fold sits at `opacity: 0` until GSAP reveals it, and a contrast checker that skips

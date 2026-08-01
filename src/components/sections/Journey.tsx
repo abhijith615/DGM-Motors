@@ -164,11 +164,20 @@ export function Journey() {
               data-stage
               className="group relative flex shrink-0 flex-col justify-center lg:h-full lg:w-[clamp(30rem,46vw,44rem)] lg:border-r lg:border-[var(--line)] lg:px-(--spacing-gutter)"
             >
-              {/* Oversized ghost index — type as texture. */}
+              {/* Oversized ghost index — type as texture.
+                  Only ABSOLUTE from lg up, where each panel is a full-height
+                  column and the numeral can sit behind vertically-centred
+                  content. Below that the panels are short and stacked, so it
+                  stays in the flow as a right-aligned block and simply pushes
+                  the copy down — the layout guarantees no collision instead of
+                  a padding value that would have to be re-tuned per breakpoint.
+                  (It previously overlapped every title on mobile: the clamp
+                  floor of 7rem was *larger* than 20vw at 375px, so it never
+                  actually shrank.) */}
               <span
                 data-stage-ghost
                 aria-hidden
-                className="t-display pointer-events-none absolute -top-6 right-0 select-none text-[clamp(7rem,20vw,17rem)] leading-none tracking-[-0.06em] text-transparent lg:-top-2 lg:right-6"
+                className="t-display pointer-events-none mb-2 block select-none text-right text-[clamp(3rem,13vw,7rem)] leading-none tracking-[-0.06em] text-transparent lg:absolute lg:-top-2 lg:right-6 lg:mb-0 lg:text-[clamp(7rem,20vw,17rem)]"
                 style={{ WebkitTextStroke: '1px var(--line-strong)' }}
               >
                 {stage.index}

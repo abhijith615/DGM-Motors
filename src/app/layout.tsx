@@ -3,7 +3,6 @@ import { Archivo, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 
 import { site, seoKeywords } from '@/lib/site';
-import { ThemeProvider, themeInitScript } from '@/components/providers/ThemeProvider';
 import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider';
 import { Cursor } from '@/components/ui/Cursor';
 import { Grain } from '@/components/layout/Grain';
@@ -92,12 +91,9 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  // Matches the theme so the mobile browser chrome blends into the page.
-  // Brand gray is the default ground, so it leads.
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#a6a6a6' },
-    { media: '(prefers-color-scheme: dark)', color: '#08090a' },
-  ],
+  // Single-theme site, so one value — the mobile browser chrome takes the
+  // brand gray and blends into the page.
+  themeColor: '#a6a6a6',
 };
 
 /* -------------------------------------------------------------------------- */
@@ -113,37 +109,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       guaranteed-invalid value, and inherit as invalid to every descendant.
       Every heading would silently fall back to system UI.
     */
-    <html
-      lang="en-IN"
-      className={`${archivo.variable} ${inter.variable} ${mono.variable}`}
-      suppressHydrationWarning
-    >
-      <head>
-        {/*
-          Runs before first paint so the correct theme is on <html> already —
-          without it the page flashes dark then snaps to light. suppressHydration
-          on <html> is required because this script mutates the attribute that
-          React is about to reconcile.
-        */}
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
+    // Single-theme site: no data-theme attribute, no blocking init script and
+    // therefore no theme flash to guard against.
+    <html lang="en-IN" className={`${archivo.variable} ${inter.variable} ${mono.variable}`}>
       <body className="antialiased">
         <JsonLd />
 
-        <ThemeProvider>
-          <SmoothScrollProvider>
-            <Preloader />
-            <Cursor />
-            <Grain />
-            <Nav />
-            <ScrollProgress />
+        <SmoothScrollProvider>
+          <Preloader />
+          <Cursor />
+          <Grain />
+          <Nav />
+          <ScrollProgress />
 
-            {/* Target of the skip link. */}
-            <main id="main">{children}</main>
+          {/* Target of the skip link. */}
+          <main id="main">{children}</main>
 
-            <Footer />
-          </SmoothScrollProvider>
-        </ThemeProvider>
+          <Footer />
+        </SmoothScrollProvider>
       </body>
     </html>
   );
