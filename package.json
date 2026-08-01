@@ -1,0 +1,36 @@
+{
+  "name": "dgm-motors",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DGM Motors — Commercial Vehicle Accident Repair. Engineered to Perfection.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.0.6",
+    "@react-three/fiber": "^9.1.2",
+    "clsx": "^2.1.1",
+    "gsap": "^3.13.0",
+    "lenis": "^1.3.1",
+    "next": "^15.3.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "three": "^0.176.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
+    "@tailwindcss/postcss": "^4.1.4",
+    "@types/node": "^22.14.1",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@types/three": "^0.176.0",
+    "eslint": "^9.25.1",
+    "eslint-config-next": "^15.3.1",
+    "tailwindcss": "^4.1.4",
+    "typescript": "^5.8.3"
+  }
+}

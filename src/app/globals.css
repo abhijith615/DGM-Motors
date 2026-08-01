@@ -1,0 +1,445 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   DGM MOTORS — DESIGN SYSTEM
+   Industrial minimalism. Swiss grid. Gunmetal + vivid red.
+   Tailwind v4 CSS-first config: everything in @theme becomes a utility.
+   ========================================================================== */
+
+/* `static` is required, not stylistic: Tailwind v4 only emits theme variables
+   it sees used by a *utility class*. Half this system is consumed as
+   `var(--font-display)` / `var(--ease-out-expo)` inside the component layer
+   below, which the scanner doesn't count — without `static` those resolve to
+   nothing at runtime and every heading silently falls back to system UI. */
+@theme static {
+  /* ---- Brand primitives ------------------------------------------------ */
+  --color-red: #e81e26; /* Vivid Red — brand accent, used sparingly */
+  --color-red-hot: #ff3a42; /* Lifted red for glows / hover states */
+  --color-red-deep: #a5141a; /* Pressed / shadow red */
+  --color-gray: #a6a6a6; /* Brand gray */
+  --color-white: #ffffff;
+
+  /* Gunmetal ramp — sampled from the DGM monogram (#303D41 / #6D797D) */
+  --color-void: #08090a;
+  --color-carbon: #0d0f11;
+  --color-graphite: #14181a;
+  --color-iron: #1e2427;
+  --color-steel: #303d41;
+  --color-alloy: #6d797d;
+  --color-chrome: #b8c1c4;
+
+  /* ---- Typography ------------------------------------------------------ */
+  --font-display: var(--font-archivo), 'Archivo', 'Helvetica Neue', sans-serif;
+  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
+  --font-mono: var(--font-mono-tech), 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Fluid display scale — clamp() so headlines never need breakpoints */
+  --text-hero: clamp(2.75rem, 9.2vw, 11rem);
+  --text-hero--line-height: 0.88;
+  --text-hero--letter-spacing: -0.045em;
+
+  --text-display: clamp(2.25rem, 6.6vw, 7.5rem);
+  --text-display--line-height: 0.9;
+  --text-display--letter-spacing: -0.04em;
+
+  --text-headline: clamp(1.75rem, 4.2vw, 4rem);
+  --text-headline--line-height: 0.98;
+  --text-headline--letter-spacing: -0.03em;
+
+  --text-title: clamp(1.25rem, 2.1vw, 1.9rem);
+  --text-title--line-height: 1.12;
+  --text-title--letter-spacing: -0.02em;
+
+  --text-lead: clamp(1.0625rem, 1.35vw, 1.3125rem);
+  --text-lead--line-height: 1.55;
+
+  --text-meta: 0.6875rem;
+  --text-meta--line-height: 1;
+  --text-meta--letter-spacing: 0.22em;
+
+  /* ---- Motion ---------------------------------------------------------- */
+  /* One easing vocabulary across GSAP + CSS keeps the whole site feeling
+     like a single machine. --ease-out-expo is the house curve. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* ---- Structure ------------------------------------------------------- */
+  --radius-panel: 2px; /* Industrial: corners are essentially sharp… */
+  --radius-card: 4px;
+  --radius-pill: 999px; /* …except where a control must read as a control */
+
+  --spacing-gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --spacing-section: clamp(6rem, 14vh, 12rem);
+}
+
+/* ==========================================================================
+   SEMANTIC TOKENS — the dark/light switch
+   Components only ever reference these, never the primitives above, so the
+   entire site re-themes from this one block.
+   ========================================================================== */
+
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: var(--color-void);
+  --bg-raised: var(--color-carbon);
+  --bg-panel: var(--color-graphite);
+  --bg-inset: #0a0c0d;
+
+  --fg: var(--color-white);
+  --fg-muted: var(--color-gray);
+  /* 5.9:1 on --bg. The obvious choice here is a dimmer grey, but --fg-subtle is
+     used almost exclusively for 10px mono labels, which WCAG treats as normal
+     text and holds to 4.5:1. */
+  --fg-subtle: #868d90;
+
+  /* Brand red is only 4.4:1 on black — fine for the display-scale accents, one
+     notch short for small text. This lifted red carries every red LABEL while
+     --color-red keeps doing the fills, rules and large type. */
+  --accent-text: var(--color-red-hot);
+
+  --line: rgb(255 255 255 / 0.09);
+  --line-strong: rgb(255 255 255 / 0.18);
+
+  --glass: rgb(255 255 255 / 0.035);
+  --glass-hi: rgb(255 255 255 / 0.07);
+
+  /* Metal sheen used by .surface-metal — light rakes across from top-left */
+  --sheen-1: rgb(255 255 255 / 0.1);
+  --sheen-2: rgb(255 255 255 / 0.015);
+
+  --grain-opacity: 0.05;
+  --cursor-blend: difference;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f2f3f4;
+  --bg-raised: #ffffff;
+  --bg-panel: #e9eaec;
+  --bg-inset: #dfe1e3;
+
+  --fg: #0d0f11;
+  --fg-muted: #545c60;
+  --fg-subtle: #5f6669; /* 5.3:1 on --bg */
+
+  /* Mirror image of the dark theme: on a light ground the brand red is too
+     bright for small text, so labels drop to the deep red instead.
+     NOTE: elements that sit on an always-dark surface regardless of theme —
+     image overlays, the lightbox backdrop — must use --color-red-hot directly,
+     not this token, or they inherit the deep red onto black. */
+  --accent-text: var(--color-red-deep);
+
+  --line: rgb(13 15 17 / 0.12);
+  --line-strong: rgb(13 15 17 / 0.24);
+
+  --glass: rgb(13 15 17 / 0.03);
+  --glass-hi: rgb(13 15 17 / 0.06);
+
+  --sheen-1: rgb(255 255 255 / 0.9);
+  --sheen-2: rgb(13 15 17 / 0.03);
+
+  --grain-opacity: 0.035;
+  --cursor-blend: multiply;
+}
+
+/* Note: there is deliberately no `prefers-color-scheme` auto-switch.
+   DGM's identity is a dark, lit workshop — the volumetric hero, the metal
+   surfaces and the red key light are all built for a black ground, and the
+   light theme is a legible alternative rather than an equal twin. Dark is
+   therefore the default for everyone; the nav toggle opts into light and the
+   choice persists. Both themes meet AA contrast. */
+
+/* Expose the semantic tokens as Tailwind utilities (bg-surface, text-fg, …) */
+@theme inline {
+  --color-surface: var(--bg);
+  --color-surface-raised: var(--bg-raised);
+  --color-surface-panel: var(--bg-panel);
+  --color-surface-inset: var(--bg-inset);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent-text: var(--accent-text);
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    /* Lenis drives scrolling; native smooth would fight it. */
+    scroll-behavior: auto;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv01';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+
+  /* Native cursor is replaced by <Cursor/> on precise pointers only. */
+  @media (hover: hover) and (pointer: fine) {
+    html.has-custom-cursor,
+    html.has-custom-cursor * {
+      cursor: none !important;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-red);
+    color: var(--color-white);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-red);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  /* Keep focus rings invisible for mouse users but never remove them. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Scrollbar — thin, industrial */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-inset);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-steel);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-red);
+  }
+}
+
+/* ==========================================================================
+   COMPONENT PRIMITIVES
+   ========================================================================== */
+
+@layer components {
+  /* --- Layout ---------------------------------------------------------- */
+
+  .shell {
+    width: 100%;
+    max-width: 96rem;
+    margin-inline: auto;
+    padding-inline: var(--spacing-gutter);
+  }
+
+  /* Swiss 12-column grid. Sections opt in; children place themselves. */
+  .grid-swiss {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(1rem, 1.6vw, 2rem);
+  }
+
+  /* --- Type ------------------------------------------------------------ */
+
+  .t-display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  /* Technical labels: section indices, spec keys, eyebrow text. */
+  .t-meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    line-height: 1;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+  }
+
+  /* --- Surfaces -------------------------------------------------------- */
+
+  /* Brushed-metal panel: a raking sheen + a hairline top highlight. */
+  .surface-metal {
+    position: relative;
+    background:
+      linear-gradient(135deg, var(--sheen-1) 0%, transparent 32%, transparent 68%, var(--sheen-2) 100%),
+      var(--bg-panel);
+    border: 1px solid var(--line);
+  }
+
+  .surface-metal::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--line-strong) 22%, var(--line-strong) 78%, transparent);
+    pointer-events: none;
+  }
+
+  /* Frosted glass used by service cards + nav. */
+  .surface-glass {
+    background: var(--glass);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--line);
+  }
+
+  /* --- Rules ------------------------------------------------------------ */
+
+  /* A hairline that draws itself in when scrolled to (see .is-inview). */
+  .rule {
+    height: 1px;
+    width: 100%;
+    background: var(--line-strong);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .is-inview .rule,
+  .rule.is-inview {
+    transform: scaleX(1);
+    transition: transform 1.2s var(--ease-out-expo);
+  }
+
+  /* --- Text reveal ------------------------------------------------------ */
+
+  /* Mask container for line/char reveals. GSAP animates the inner element;
+     this just guarantees the clip. */
+  .mask-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em; /* room for descenders inside the clip */
+    margin-bottom: -0.08em;
+  }
+}
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+
+@layer utilities {
+  /* Promote to its own layer for scroll-linked transforms. Applied narrowly —
+     blanket will-change is a memory leak, not an optimisation. */
+  .gpu {
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+  }
+
+  .text-gradient-steel {
+    background: linear-gradient(180deg, var(--fg) 0%, var(--fg) 45%, var(--fg-subtle) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glow-red {
+    box-shadow:
+      0 0 0 1px rgb(232 30 38 / 0.4),
+      0 0 24px -4px rgb(232 30 38 / 0.55),
+      0 0 64px -12px rgb(232 30 38 / 0.4);
+  }
+
+  /* Edge-fade for horizontal rails so content dissolves rather than cuts. */
+  .fade-x {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .fade-b {
+    -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent);
+    mask-image: linear-gradient(180deg, #000 60%, transparent);
+  }
+}
+
+/* ==========================================================================
+   KEYFRAMES
+   Only for genuinely ambient loops. Everything narrative is GSAP + scroll.
+   ========================================================================== */
+
+/* Seamless ticker: two identical copies, translate by exactly one copy width. */
+@keyframes dgm-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Scroll cue pip falling down its rail. */
+@keyframes dgm-drop {
+  0% {
+    transform: translateY(-100%);
+  }
+  55%,
+  100% {
+    transform: translateY(400%);
+  }
+}
+
+/* Slow rake of light across a metal surface — used on hover states. */
+@keyframes dgm-sheen {
+  from {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   Everything scroll-driven degrades to "already in its final state" — never
+   to a broken layout. GSAP checks the same query via gsap.matchMedia().
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .rule {
+    transform: scaleX(1);
+  }
+
+  /* Elements GSAP would have revealed must not be left invisible. */
+  [data-reveal],
+  [data-split] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}
