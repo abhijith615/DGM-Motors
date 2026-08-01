@@ -94,7 +94,6 @@ export const hero = {
     'Fabrication',
     'Chassis Straightening',
     'Insurance Claims',
-    'Fleet Maintenance',
     'On-Site Recovery',
   ],
 } as const;
@@ -223,6 +222,12 @@ export type Service = {
   title: string;
   body: string;
   points: string[];
+  /**
+   * Built artefact from `scripts/generate-media.mjs` — the 2048² PNG masters in
+   * `New Creatives/` are resized to 1000px WebP. Filenames are the slugified
+   * master names, which is why they match the `id` above.
+   */
+  image: string;
 };
 
 export const services: Service[] = [
@@ -232,6 +237,7 @@ export const services: Service[] = [
     title: 'Accident Repair',
     body: 'End-to-end restoration of collision-damaged commercial vehicles, from structural survey through to final road trial.',
     points: ['Structural survey', 'Impact path tracing', 'Full documentation'],
+    image: '/services/accident-repair.webp',
   },
   {
     id: 'body-building',
@@ -239,6 +245,7 @@ export const services: Service[] = [
     title: 'Body Building',
     body: 'Load bodies, cabins, tippers and containers built to the duty cycle and payload the vehicle actually runs.',
     points: ['Load bodies', 'Tippers & containers', 'Cabin building'],
+    image: '/services/body-building.webp',
   },
   {
     id: 'fabrication',
@@ -246,6 +253,7 @@ export const services: Service[] = [
     title: 'Fabrication',
     body: 'In-house cutting, forming and jig-fitting of structural sections, brackets, sub-frames and custom assemblies.',
     points: ['Sub-frames', 'Custom assemblies', 'Jig-fitted accuracy'],
+    image: '/services/fabrication.webp',
   },
   {
     id: 'mechanical',
@@ -253,6 +261,7 @@ export const services: Service[] = [
     title: 'Mechanical Repairs',
     body: 'Engine, transmission, axle, steering, suspension and braking work carried out to manufacturer torque and clearance specification.',
     points: ['Engine & transmission', 'Axles & suspension', 'Braking systems'],
+    image: '/services/mechanical-repairs.webp',
   },
   {
     id: 'electrical',
@@ -260,6 +269,7 @@ export const services: Service[] = [
     title: 'Electrical Repairs',
     body: 'Harness repair and replacement, lighting, charging, starting and instrumentation faults traced to the circuit.',
     points: ['Harness repair', 'Charging & starting', 'Fault diagnosis'],
+    image: '/services/electrical-repairs.webp',
   },
   {
     id: 'chassis',
@@ -267,6 +277,7 @@ export const services: Service[] = [
     title: 'Chassis Straightening',
     body: 'Hydraulic bench straightening under controlled load, drawn back to factory datum and verified by measurement.',
     points: ['Hydraulic bench', '± 1.5 mm to datum', 'Verified by measurement'],
+    image: '/services/chassis-straightening.webp',
   },
   {
     id: 'insurance',
@@ -274,20 +285,15 @@ export const services: Service[] = [
     title: 'Insurance Repairs',
     body: 'Authorised workshop procedures with surveyor coordination, estimate preparation and complete claim documentation.',
     points: ['Surveyor coordination', 'Estimate preparation', 'Claim documentation'],
-  },
-  {
-    id: 'fleet',
-    index: '08',
-    title: 'Fleet Maintenance',
-    body: 'Scheduled preventive programmes for operators, built around route profile, load class and uptime targets.',
-    points: ['Preventive schedules', 'Uptime planning', 'Operator reporting'],
+    image: '/services/insurance-repairs.webp',
   },
   {
     id: 'onsite',
-    index: '09',
+    index: '08',
     title: 'On-Site Emergency Repairs',
     body: 'Mobile teams dispatched to breakdown and accident locations across Tamil Nadu and Kerala, day or night.',
     points: ['24/7 dispatch', 'Mobile workshop', 'Recovery support'],
+    image: '/services/on-site-emergency-repairs.webp',
   },
 ];
 
@@ -439,6 +445,29 @@ export const contact = {
     'Fleet maintenance',
     'On-site emergency',
   ],
+} as const;
+
+/* -------------------------------------------------------------------------- */
+/* MEDIA                                                                       */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Every video path the site uses. All of these are BUILT ARTEFACTS — the
+ * masters live in `New Creatives/` and are compressed by
+ * `node scripts/generate-media.mjs`. Re-run that script if a master changes;
+ * do not point these at the originals (they are 9–12 Mbps).
+ */
+export const media = {
+  hero: {
+    desktop: '/video/hero-desktop.mp4',
+    mobile: '/video/hero-mobile.mp4',
+    posterDesktop: '/video/hero-desktop-poster.webp',
+    posterMobile: '/video/hero-mobile-poster.webp',
+  },
+  excellence: {
+    src: '/video/excellence.mp4',
+    poster: '/video/excellence-poster.webp',
+  },
 } as const;
 
 /* -------------------------------------------------------------------------- */

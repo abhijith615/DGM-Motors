@@ -3,12 +3,12 @@
 import { useRef } from 'react';
 import { gsap } from '@/lib/gsap';
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
-import { excellence, plates } from '@/lib/site';
+import { excellence, media } from '@/lib/site';
 import { SplitHeading } from '@/components/ui/SplitHeading';
 import { Reveal } from '@/components/ui/Reveal';
 import { Counter } from '@/components/ui/Counter';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { Plate } from '@/components/gallery/Plate';
+import { BackgroundVideo } from '@/components/media/BackgroundVideo';
 
 export function Excellence() {
   const root = useRef<HTMLElement>(null);
@@ -88,26 +88,29 @@ export function Excellence() {
             </Reveal>
           </div>
 
-          {/* --- plate --- */}
+          {/* --- workshop film --- */}
           <div className="col-span-12 lg:col-span-5 lg:col-start-8">
             <Reveal variant="clip" duration={1.5}>
               <figure
                 data-parallax-frame
                 className="relative aspect-4/5 w-full overflow-hidden rounded-[var(--radius-panel)] border border-[var(--line)]"
               >
-                {/* Oversized inner so the parallax travel never exposes an edge. */}
+                {/* Oversized inner so the parallax travel never exposes an edge.
+                    The video fills it via object-cover, so the 16:9 source is
+                    cropped to this 4:5 frame rather than letterboxed. */}
                 <div data-parallax-inner className="absolute inset-x-0 -inset-y-[14%]">
-                  <Plate plate={plates[1]} sizes="(max-width: 1024px) 100vw, 42vw" />
+                  <BackgroundVideo
+                    sources={[{ src: media.excellence.src, poster: media.excellence.poster }]}
+                  />
                 </div>
 
-                {/* Scrim sized for legibility over any future photograph, not
-                    just the dark generated plate. */}
+                {/* Scrim sized for legibility over the footage's bright frames. */}
                 <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-linear-to-t from-black/92 via-black/55 to-transparent p-5 pt-14">
                   <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-white">
-                    {plates[1].caption}
+                    Accident damage, as received
                   </span>
                   <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-[var(--color-red-hot)]">
-                    {plates[1].meta}
+                    Intake bay
                   </span>
                 </figcaption>
               </figure>

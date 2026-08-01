@@ -11,9 +11,9 @@ Tamil Nadu · Kerala
 ---
 
 An immersive, single-page marketing site for a commercial vehicle accident repair
-workshop. Built for scroll-driven storytelling at a sustained 60 FPS, with a WebGL
-hero, a pinned horizontal process narrative, and a design system that ships both a
-dark and a light theme.
+workshop. Built for scroll-driven storytelling at a sustained 60 FPS, with a
+full-bleed video hero, a pinned horizontal process narrative, and a design system
+that ships both a light (brand gray) and a dark theme.
 
 ## Stack
 
@@ -24,7 +24,7 @@ dark and a light theme.
 | Styling | **Tailwind CSS v4** (CSS-first `@theme`) | Whole design system lives in one file, no JS config to drift |
 | Animation | **GSAP 3.15** + ScrollTrigger, ScrollToPlugin, SplitText | The only toolkit that does pinning, scrubbing and text splitting correctly together |
 | Smooth scroll | **Lenis** | Driven by GSAP's ticker so ScrollTrigger never reads a stale position |
-| 3D | **three.js** + React Three Fiber + drei | Volumetric hero, custom GLSL |
+| Media | Compressed H.264 + WebP, built by script | See *Creatives pipeline* below |
 
 ## Quick start
 
@@ -62,6 +62,47 @@ hardcodes content. Search the file for `TODO:`.
 6. **Statistics** in `excellence.stats` and `pillars` — these are plausible placeholders. **Verify every number before publishing**; they are trust claims.
 
 ---
+
+## Creatives pipeline
+
+The raw masters live in `New Creatives/` and are **never shipped**. Everything the
+browser receives is derived:
+
+```bash
+node scripts/generate-media.mjs
+```
+
+| | Master | Shipped |
+|---|---|---|
+| 3 × 10s clips | 42 MB @ 9–12 Mbps | **9.5 MB** H.264, no audio, `+faststart` |
+| 8 service stills | 36 MB of 2048² PNG | **1.0 MB** WebP @ 1000px |
+
+Re-run the script whenever a master changes. Paths are declared once in
+`media` and `services[].image` in `src/lib/site.ts` — never point those at the
+originals.
+
+**Why H.264 and not VP9/AV1:** these are looping background videos. H.264 is the
+only codec with universal *hardware* decode; software-decoding a loop is a
+measurable battery drain on phones, which costs more than the bytes it saves.
+
+### How the video is delivered
+
+`BackgroundVideo` handles the five things a bare `<video autoplay loop muted>`
+does not:
+
+- **One file, ever.** The hero has a landscape and a portrait cut; the source is
+  chosen in JS from `matchMedia`, because browsers evaluate `media` on `<source>`
+  inconsistently for video and never re-evaluate it on resize.
+- **The poster is a `<picture>`,** not a CSS background and not `<video poster>`.
+  `media` on `<source>` *is* reliable for images: evaluated at parse time,
+  exactly one file fetched, no JS, correct in SSR.
+- **It doesn't compete with LCP.** Below-the-fold video waits for an
+  IntersectionObserver (with a 4s fail-open). The hero passes `eager` — it's
+  always in view, so observing it only adds a way to never load.
+- **It stops when unwatched.** Off-screen or hidden tab → pause.
+- **Reduced motion means no motion.** The video is never loaded, only the poster.
+
+Autoplay rejection (iOS low-power mode) degrades to the poster, not a black box.
 
 ## Adding real photography
 
@@ -137,10 +178,9 @@ src/
 │  ├─ sitemap.ts · robots.ts · manifest.ts
 │  └─ icon.png · apple-icon.png
 ├─ components/
-│  ├─ canvas/             WebGL — HeroCanvas (gate), HeroScene, HeroFallback
-│  │  └─ shaders/         GLSL: volumetric light, GPU dust
 │  ├─ gallery/            Plate (generated imagery), Lightbox
-│  ├─ layout/             Nav, Footer, Preloader, Grain, ScrollProgress
+│  ├─ media/              BackgroundVideo (responsive, lazy, pause-when-unwatched)
+│  ├─ layout/             Nav, Footer, Preloader, Grain, ScrollProgress, TornEdge
 │  ├─ providers/          SmoothScrollProvider (Lenis⟷GSAP), ThemeProvider
 │  ├─ sections/           The eight page sections
 │  ├─ seo/                JSON-LD
@@ -200,8 +240,8 @@ inside `gsap.context()` + `gsap.matchMedia()` and reverted on unmount.
 | Metric | Result |
 |---|---|
 | First Load JS | **176 kB** |
-| three.js + drei | **~146 kB gzip — async, never in first load** |
-| Page chunk | 14 kB |
+| Page chunk | 13.5 kB |
+| Video shipped | 9.5 MB (lazy, never blocking) |
 
 ```bash
 npm run build && node scripts/analyze-bundle.mjs
@@ -209,19 +249,11 @@ npm run build && node scripts/analyze-bundle.mjs
 
 Reports gzipped chunk sizes and flags which chunk each heavy library landed in.
 
-**Watch out:** importing *any* named export from `HeroCanvas.tsx` puts three.js back
-into the static graph and silently adds ~150 kB to first load. That is why
-`HeroFallback` lives in its own module. The analyzer script exists to catch exactly
-this regression.
-
 Other measures:
-- WebGL hero is `next/dynamic` + `ssr: false`, behind a capability gate (skipped on
-  touch/narrow viewports, without WebGL2, under 4 cores, or with reduced motion).
-- `frameloop` flips to `'never'` when the hero scrolls out of view or the tab is hidden.
-- DPR capped at 1.75; the HDR environment is built in-scene from `<Lightformer>`s
-  (`frames={1}`) so there is no `.hdr` download and no CDN dependency.
-- Particles animate entirely in the vertex shader — the CPU never touches the buffer.
-- Scroll progress is read through a **ref**, not state, so the render loop doesn't
+- All video is compressed, lazy, paused when unwatched, and skipped entirely under
+  reduced motion (see *Creatives pipeline*).
+- Service stills are pre-sized WebP served through `next/image` responsive variants.
+- Scroll progress is read through a **ref**, not state, so the render loop does not
   re-render React 60×/second.
 - Fonts self-hosted by `next/font` with `display: swap`.
 

@@ -3,12 +3,9 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
 
-  // three.js ships untranspiled ESM examples; let Next optimise the barrel imports.
-  transpilePackages: ['three'],
-
   experimental: {
-    // Tree-shake the heavy vendor barrels so the first load JS stays small.
-    optimizePackageImports: ['@react-three/drei', '@react-three/fiber', 'gsap'],
+    // Tree-shake the GSAP barrel so the first load JS stays small.
+    optimizePackageImports: ['gsap'],
   },
 
   images: {

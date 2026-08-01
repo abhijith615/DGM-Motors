@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRef } from 'react';
 import { gsap } from '@/lib/gsap';
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
@@ -61,12 +62,17 @@ export function Services() {
           </SplitHeading>
 
           <p className="max-w-[38ch] text-lead text-[var(--fg-muted)] md:text-right">
-            Nine disciplines under one roof — which is why a repair here does not
+            Eight disciplines under one roof — which is why a repair here does not
             wait on a subcontractor.
           </p>
         </div>
 
-        <ul data-service-grid className="mt-16 grid gap-px border border-[var(--line)] bg-[var(--line)] sm:grid-cols-2 lg:grid-cols-3">
+        {/* 4 columns, not 3: eight cards divide evenly into two full rows, so
+            the grid never ends on a ragged part-row. */}
+        <ul
+          data-service-grid
+          className="mt-16 grid gap-px border border-[var(--line)] bg-[var(--line)] sm:grid-cols-2 lg:grid-cols-4"
+        >
           {services.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
@@ -143,8 +149,39 @@ function ServiceCard({ service }: { service: Service }) {
         ref={card}
         data-cursor="link"
         style={{ ['--spot' as string]: 0, ['--mx' as string]: '50%', ['--my' as string]: '50%' }}
-        className="group relative flex h-full min-h-[19rem] flex-col justify-between overflow-hidden bg-[var(--bg-raised)] p-8 transition-colors duration-500 [transform-style:preserve-3d] hover:bg-[var(--bg-panel)]"
+        className="group relative flex h-full flex-col overflow-hidden bg-[var(--bg-raised)] transition-colors duration-500 [transform-style:preserve-3d] hover:bg-[var(--bg-panel)]"
       >
+        {/* --- media --- */}
+        <div className="relative aspect-4/3 w-full shrink-0 overflow-hidden bg-[var(--bg-inset)]">
+          <Image
+            src={service.image}
+            alt=""
+            fill
+            // 4 columns at desktop, 2 at tablet, 1 at phone.
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover transition-transform duration-[1.1s] [transition-timing-function:var(--ease-out-expo)] group-hover:scale-[1.06]"
+          />
+
+          {/* Scrim for the index + arrow, which sit over photography. */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-black/70 to-transparent"
+          />
+
+          <span className="absolute left-5 top-4 font-[family-name:var(--font-mono)] text-[10px] tabular-nums tracking-[0.2em] text-white/90">
+            {service.index}
+          </span>
+
+          {/* Arrow that swings up-right on hover. */}
+          <svg
+            viewBox="0 0 16 16"
+            aria-hidden
+            className="absolute right-5 top-4 h-4 w-4 text-white/80 transition-all duration-500 [transition-timing-function:var(--ease-out-expo)] group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[var(--color-red-hot)]"
+          >
+            <path d="M3 13 13 3M6 3h7v7" fill="none" stroke="currentColor" strokeWidth="1.4" />
+          </svg>
+        </div>
+
         {/* Specular spotlight following the pointer. */}
         <span
           aria-hidden
@@ -157,25 +194,11 @@ function ServiceCard({ service }: { service: Service }) {
         {/* Hairline that ignites along the top edge on hover. */}
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-[var(--color-red)] transition-transform duration-700 [transition-timing-function:var(--ease-out-expo)] group-hover:scale-x-100"
+          className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px origin-left scale-x-0 bg-[var(--color-red)] transition-transform duration-700 [transition-timing-function:var(--ease-out-expo)] group-hover:scale-x-100"
         />
 
-        <div ref={content} className="relative flex h-full flex-col justify-between [transform-style:preserve-3d]">
-          <div className="flex items-start justify-between gap-4">
-            <span className="font-[family-name:var(--font-mono)] text-[10px] tabular-nums tracking-[0.2em] text-[var(--fg-subtle)] transition-colors duration-500 group-hover:text-[var(--accent-text)]">
-              {service.index}
-            </span>
-            {/* Arrow that swings up-right on hover. */}
-            <svg
-              viewBox="0 0 16 16"
-              aria-hidden
-              className="h-4 w-4 shrink-0 text-[var(--fg-subtle)] transition-all duration-500 [transition-timing-function:var(--ease-out-expo)] group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[var(--accent-text)]"
-            >
-              <path d="M3 13 13 3M6 3h7v7" fill="none" stroke="currentColor" strokeWidth="1.4" />
-            </svg>
-          </div>
-
-          <div className="mt-14">
+        <div ref={content} className="relative flex h-full flex-col justify-between p-7 [transform-style:preserve-3d]">
+          <div>
             <h3 className="t-display text-title tracking-[-0.02em]">{service.title}</h3>
 
             <p className="mt-4 text-sm leading-relaxed text-[var(--fg-muted)]">{service.body}</p>

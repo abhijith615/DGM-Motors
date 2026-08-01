@@ -1,27 +1,12 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { useRef } from 'react';
 import { gsap, ScrollTrigger, SplitText } from '@/lib/gsap';
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
 import { onReady } from '@/lib/ready';
-import { hero } from '@/lib/site';
+import { hero, media } from '@/lib/site';
 import { Button } from '@/components/ui/Button';
-import { HeroFallback } from '@/components/canvas/HeroFallback';
-
-/**
- * The WebGL hero is ~150 KB gzip of three.js + drei. Loading it lazily and
- * client-only keeps it off the critical path entirely — the headline paints
- * from HTML + CSS while three streams in behind it.
- *
- * Note the fallback is imported from its OWN module, not from HeroCanvas.
- * Pulling any named export out of HeroCanvas would put three.js back in the
- * static graph and make this dynamic import decorative.
- */
-const HeroCanvas = dynamic(() => import('@/components/canvas/HeroCanvas'), {
-  ssr: false,
-  loading: () => <HeroFallback />,
-});
+import { BackgroundVideo } from '@/components/media/BackgroundVideo';
 
 export function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -119,13 +104,19 @@ export function Hero() {
       // it the secondary button's --fg would resolve to ink on black.
       className="on-dark relative min-h-[100svh] w-full overflow-hidden bg-[var(--color-void)] text-white"
     >
-      <HeroCanvas />
-
-      {/* Legibility floor under the type — the shader is dark but not uniformly. */}
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,9,10,0.55)_0%,transparent_28%,transparent_52%,rgba(8,9,10,0.88)_100%)]"
+      {/* Portrait cut on phones, landscape on everything else — only the
+          matching file is ever downloaded (see BackgroundVideo). */}
+      <BackgroundVideo
+        eager
+        sources={[
+          { src: media.hero.mobile, poster: media.hero.posterMobile, media: '(max-width: 767px)' },
+          { src: media.hero.desktop, poster: media.hero.posterDesktop },
+        ]}
       />
+
+      {/* Legibility floor. Sized against pure white, not the average frame —
+          see .hero-scrim in globals.css. */}
+      <div aria-hidden className="hero-scrim absolute inset-0" />
 
       <div className="shell relative z-10 flex min-h-[100svh] flex-col justify-between pb-8 pt-24 md:pt-28">
         <div data-hero-content>
@@ -153,9 +144,13 @@ export function Hero() {
             </span>
           </h1>
 
+          {/* --color-chrome, not the old #8d9699: this line is pushed to the
+              right of the hero, which is both the brightest part of the footage
+              and where the scrim is lightest. The dimmer grey measured 1.97:1
+              there against the old WebGL backdrop's assumptions. */}
           <p
             data-hero-fade
-            className="t-display mt-5 text-[clamp(0.95rem,1.85vw,1.9rem)] leading-none tracking-[-0.02em] text-[#8d9699] md:-mt-[0.35em] md:pl-[max(38%,22rem)]"
+            className="t-display mt-5 text-[clamp(0.95rem,1.85vw,1.9rem)] leading-none tracking-[-0.02em] text-[var(--color-chrome)] md:-mt-[0.35em] md:pl-[max(38%,22rem)]"
           >
             Engineered to <span className="text-white">Perfection</span>
             <span className="text-[var(--color-red)]">.</span>

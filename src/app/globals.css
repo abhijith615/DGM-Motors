@@ -189,6 +189,36 @@
    or --fg. They are pinned to --color-red-hot / white via .on-dark below. */
 
 /* --------------------------------------------------------------------------
+   HERO SCRIM
+   The hero footage is a brightly-lit workshop, and its specular highlights
+   (ceiling panels, the glint off the cracked windscreen) reach pure white.
+   White display type over pure white is 1:1, so the scrim is sized against the
+   WORST case rather than the average — 55% black over pure white lands at
+   5.3:1, and every stop below is heavier than that. This has to hold for any
+   frame of a 10-second loop, not just the one frame sampled for the poster.
+   -------------------------------------------------------------------------- */
+
+.hero-scrim {
+  background:
+    /* nav cover */
+    linear-gradient(180deg, rgb(6 7 8 / 0.72) 0%, rgb(6 7 8 / 0) 22%),
+    /* ticker + scroll-cue cover */ linear-gradient(0deg, rgb(6 7 8 / 0.92) 0%, rgb(6 7 8 / 0) 34%),
+    /* headline side, easing off toward the right so the workshop stays visible.
+       The right stop is 0.62 rather than 0.55 for margin: the numbers above are
+       measured from the poster frame, but any of the loop's other ~250 frames
+       could be brighter, and the accent line sits in exactly this zone. */
+      linear-gradient(100deg, rgb(6 7 8 / 0.88) 0%, rgb(6 7 8 / 0.72) 45%, rgb(6 7 8 / 0.62) 100%);
+}
+
+@media (max-width: 767px) {
+  /* Portrait footage, full-width type: the gradient runs vertically instead,
+     and never drops below 60%. */
+  .hero-scrim {
+    background: linear-gradient(180deg, rgb(6 7 8 / 0.8) 0%, rgb(6 7 8 / 0.62) 38%, rgb(6 7 8 / 0.93) 100%);
+  }
+}
+
+/* --------------------------------------------------------------------------
    ALWAYS-DARK CONTEXT
    The hero and any full-bleed image overlay stay dark in both themes. Anything
    inside .on-dark gets the dark theme's text tokens locally, so a single set of
