@@ -55,11 +55,16 @@ source of truth for all copy, contact details and data on the page — no compon
 hardcodes content. Search the file for `TODO:`.
 
 1. **`site.url`** — the live domain. Drives canonical URLs, the sitemap, OG tags and JSON-LD.
-2. **`site.contact`** — phone (`tel` in E.164, `label` for display), WhatsApp number, email, hours.
-3. **`site.address`** — street address and **`lat` / `lng`**. The coordinates drive the embedded Google Map (no API key needed).
+2. **`site.contact.email`** — still a guess. (Phone and WhatsApp are the real number.)
+3. **`site.address.lat` / `lng`** — currently *approximate* (Karuppur/Salem, not the yard).
+   They feed only the JSON-LD `geo` property; the embedded map is geocoded from the
+   address string, so what visitors see is already correct. For the exact pin,
+   right-click the workshop in Google Maps — the lat,lng is the first menu item.
 4. **`site.social`** — profile URLs. Empty strings are filtered out of the UI automatically.
 5. **`testimonials`** — replace with real, attributable, permissioned customer quotes.
 6. **Statistics** in `excellence.stats` and `pillars` — these are plausible placeholders. **Verify every number before publishing**; they are trust claims.
+
+✅ Address and phone are the real business details.
 
 ---
 
@@ -266,7 +271,21 @@ everyone; the nav toggle opts into the dark workshop variant and persists the ch
 There is deliberately no `prefers-color-scheme` auto-switch. A blocking inline script
 applies the stored theme before first paint so there's no flash.
 
-Both themes are verified at **0 AA failures** by the live auditor described above.
+Both themes are verified at **0 AA failures**, across 219 text nodes per theme.
+
+**When re-auditing, force the scroll-reveals visible first.** Everything below the
+fold sits at `opacity: 0` until GSAP reveals it, and a contrast checker that skips
+invisible elements will silently skip most of the page — which is exactly how a
+1.86:1 red-on-grey stat suffix survived three earlier passes:
+
+```js
+document.querySelectorAll('[data-reveal],[data-split],[data-pillar],[data-service-card],[data-quote],[data-spec-row],[data-hero-fade],[data-stage-el]')
+  .forEach(el => { el.style.opacity = '1'; el.style.visibility = 'visible'; el.style.transform = 'none'; });
+```
+
+Text over photography or video can't be checked this way at all — the DOM says
+"white on white" because it can't see the image. Those are verified separately by
+compositing the real scrim over the real pixels and sampling the brightest one.
 
 ---
 

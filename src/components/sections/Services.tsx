@@ -162,13 +162,17 @@ function ServiceCard({ service }: { service: Service }) {
             className="object-cover transition-transform duration-[1.1s] [transition-timing-function:var(--ease-out-expo)] group-hover:scale-[1.06]"
           />
 
-          {/* Scrim for the index + arrow, which sit over photography. */}
+          {/* Scrim for the index + arrow, which sit over photography.
+              85%, not 70%: measured against the actual stills, 70% left the
+              index at 4.26:1 on the brightest one (chassis-straightening) and
+              barely 4.5 on two others. This has to hold for whatever image is
+              dropped in next, not just today's set. */}
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-black/70 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-black/85 via-black/45 to-transparent"
           />
 
-          <span className="absolute left-5 top-4 font-[family-name:var(--font-mono)] text-[10px] tabular-nums tracking-[0.2em] text-white/90">
+          <span className="absolute left-5 top-4 font-[family-name:var(--font-mono)] text-[10px] tabular-nums tracking-[0.2em] text-white">
             {service.index}
           </span>
 
@@ -176,7 +180,7 @@ function ServiceCard({ service }: { service: Service }) {
           <svg
             viewBox="0 0 16 16"
             aria-hidden
-            className="absolute right-5 top-4 h-4 w-4 text-white/80 transition-all duration-500 [transition-timing-function:var(--ease-out-expo)] group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[var(--color-red-hot)]"
+            className="absolute right-5 top-4 h-4 w-4 text-white/95 transition-all duration-500 [transition-timing-function:var(--ease-out-expo)] group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[var(--color-red-hot)]"
           >
             <path d="M3 13 13 3M6 3h7v7" fill="none" stroke="currentColor" strokeWidth="1.4" />
           </svg>

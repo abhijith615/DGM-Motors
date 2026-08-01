@@ -21,12 +21,15 @@ export function Counter({
   prefix = '',
   duration = 2.2,
   className,
+  suffixClassName,
 }: {
   value: number;
   suffix?: string;
   prefix?: string;
   duration?: number;
   className?: string;
+  /** For word suffixes that would otherwise be as wide as the number itself. */
+  suffixClassName?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
 
@@ -63,7 +66,11 @@ export function Counter({
       {/* Server-renders the final value so it's correct with JS off and for
           crawlers; the tween overwrites it from 0 on the client. */}
       <span ref={ref}>{formatStat(value)}</span>
-      {suffix && <span className="text-[var(--color-red)]">{suffix}</span>}
+      {/* --accent-text, not --color-red. These counters sit on the brand-gray
+          band in section 01, where vivid red is 1.86:1 — below even the 3:1
+          large-text floor. --accent-text is the palette's legible red for both
+          themes (4.6:1 on gray, 11:1 on white, 5.6:1 on the dark ground). */}
+      {suffix && <span className={cn('text-[var(--accent-text)]', suffixClassName)}>{suffix}</span>}
     </span>
   );
 }

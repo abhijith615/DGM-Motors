@@ -18,25 +18,31 @@ export const site = {
     'Commercial vehicle accident repair, truck body building, fabrication, chassis straightening, mechanical and electrical repairs across Tamil Nadu and Kerala. Insurance-authorised workshop with on-site emergency support.',
 
   contact: {
-    /** TODO: real numbers. Keep E.164 in `tel`/`whatsapp`, pretty in `label`. */
-    phone: { tel: '+919000000000', label: '+91 90000 00000' },
-    whatsapp: { number: '919000000000', label: 'WhatsApp Us' },
-    email: 'service@dgmmotors.in', // TODO
+    phone: { tel: '+919842072068', label: '+91 98420 72068' },
+    whatsapp: { number: '919842072068', label: 'WhatsApp Us' },
+    email: 'service@dgmmotors.in', // TODO: confirm the real address
     hours: 'Mon – Sat · 09:00 – 20:00 IST',
     emergency: '24 / 7 breakdown & recovery desk',
   },
 
   address: {
-    // TODO: exact street address.
-    street: 'Industrial Estate',
-    locality: 'Coimbatore',
+    // Split for schema.org PostalAddress: everything before the town goes in
+    // streetAddress, the town in addressLocality.
+    street: '5/95/1, Thiruvenda Nagar, New Colony, Saminayakkanpatti, Karuppur',
+    locality: 'Salem',
     region: 'Tamil Nadu',
-    postalCode: '641021',
+    postalCode: '636011',
     country: 'IN',
     countryName: 'India',
-    /** TODO: exact workshop coordinates — also drives the embedded map. */
-    lat: 11.0168,
-    lng: 76.9558,
+    /**
+     * ⚠️ TODO: APPROXIMATE — these are Karuppur/Salem, not the yard itself.
+     * They are only used for the JSON-LD `geo` property; the embedded map is
+     * driven by the address string below, so what visitors see is correct
+     * regardless. Replace with the exact pin (right-click the workshop in
+     * Google Maps → the lat,lng is the first menu item) before launch.
+     */
+    lat: 11.7,
+    lng: 78.073,
   },
 
   social: {
@@ -50,8 +56,16 @@ export const site = {
   serviceAreas: ['Tamil Nadu', 'Kerala'],
 } as const;
 
-/** Google Maps embed URL derived from the coordinates above — no API key needed. */
-export const mapEmbedUrl = `https://www.google.com/maps?q=${site.address.lat},${site.address.lng}&z=14&output=embed`;
+/**
+ * Google Maps embed — no API key needed.
+ *
+ * Built from the ADDRESS STRING, not the lat/lng above. Google geocodes the
+ * real address, so the pin visitors see is correct even while the coordinates
+ * are still the approximate ones used for JSON-LD.
+ */
+export const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(
+  `${site.address.street}, ${site.address.locality}, ${site.address.region} ${site.address.postalCode}, India`
+)}&z=15&output=embed`;
 
 export const whatsappUrl = `https://wa.me/${site.contact.whatsapp.number}?text=${encodeURIComponent(
   "Hello DGM Motors — I'd like to request an inspection for my commercial vehicle."

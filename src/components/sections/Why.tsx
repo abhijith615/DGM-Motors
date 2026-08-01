@@ -67,27 +67,43 @@ export function Why() {
               data-cursor="link"
               className="group relative isolate overflow-hidden border-b border-[var(--line)]"
             >
-              {/* Red wipe rising from the baseline. */}
+              {/* Grey wash rising from the baseline. Every text token on the
+                  row already clears AA against it, so nothing needs a
+                  hover-only colour — which is what previously broke, since the
+                  red accents vanished into a red field. */}
               <span
                 aria-hidden
-                className="absolute inset-0 -z-10 translate-y-full bg-[var(--color-red)] transition-transform duration-700 [transition-timing-function:var(--ease-out-expo)] group-hover:translate-y-0"
+                className="absolute inset-0 -z-10 translate-y-full bg-[var(--row-highlight)] transition-transform duration-700 [transition-timing-function:var(--ease-out-expo)] group-hover:translate-y-0"
               />
 
-              <div className="grid-swiss items-baseline gap-y-4 py-9 transition-colors duration-500 group-hover:text-white md:py-11">
+              <div className="grid-swiss items-baseline gap-y-4 py-9 md:py-11">
                 {/* index */}
-                <span className="col-span-2 font-[family-name:var(--font-mono)] text-[10px] tabular-nums tracking-[0.2em] text-[var(--fg-subtle)] transition-colors duration-500 group-hover:text-white/70 md:col-span-1">
+                <span className="col-span-2 font-[family-name:var(--font-mono)] text-[10px] tabular-nums tracking-[0.2em] text-[var(--fg-subtle)] md:col-span-1">
                   {String(i + 1).padStart(2, '0')}
                 </span>
 
                 {/* counter / display value */}
-                <span className="col-span-10 md:col-span-3">
-                  <span className="t-display block text-[clamp(2.25rem,5vw,4.25rem)] leading-none tracking-[-0.04em]">
-                    {pillar.value === null ? (
-                      pillar.display
-                    ) : (
-                      <Counter value={pillar.value} suffix={pillar.suffix} prefix={pillar.prefix} />
-                    )}
-                  </span>
+                <span className="col-span-10 min-w-0 md:col-span-3">
+                  {pillar.value === null ? (
+                    /* A word, not a metric. At the numeric scale "Authorised"
+                       measures 450px in a 312px column and runs straight over
+                       the title, so word values get their own smaller size. */
+                    <span className="t-display block text-[clamp(1.35rem,2.6vw,2.3rem)] leading-none tracking-[-0.03em] text-balance">
+                      {pillar.display}
+                    </span>
+                  ) : (
+                    <span className="t-display block text-[clamp(2.25rem,5vw,4.25rem)] leading-none tracking-[-0.04em]">
+                      <Counter
+                        value={pillar.value}
+                        suffix={pillar.suffix}
+                        prefix={pillar.prefix}
+                        // A word suffix (" States") is as wide as the number
+                        // itself at full scale; em-relative keeps it in
+                        // proportion at every breakpoint.
+                        suffixClassName={/[a-z]{2,}/i.test(pillar.suffix ?? '') ? 'text-[0.4em]' : undefined}
+                      />
+                    </span>
+                  )}
                 </span>
 
                 {/* title */}
@@ -98,7 +114,7 @@ export function Why() {
                 </h3>
 
                 {/* body */}
-                <p className="col-span-12 max-w-[46ch] text-sm leading-relaxed text-[var(--fg-muted)] transition-colors duration-500 group-hover:text-white/85 md:col-span-4">
+                <p className="col-span-12 max-w-[46ch] text-sm leading-relaxed text-[var(--fg-muted)] md:col-span-4">
                   {pillar.body}
                 </p>
               </div>
