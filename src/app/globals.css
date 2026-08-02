@@ -161,6 +161,21 @@
    overlays — must NOT use --accent-text or --fg, which resolve to ink-on-dark.
    They are pinned to --color-red-hot / white via .on-dark below. */
 
+/* Hero headline, 30% smaller from lg up — DESKTOP ONLY.
+   Overriding the token rather than adding a responsive class works because
+   Tailwind emits `.text-hero { font-size: var(--text-hero) }`, and --text-hero
+   has exactly one consumer (the hero h1).
+
+   The vw coefficient and the cap both scale by 0.7 (9.2 → 6.44vw, 11 → 7.7rem)
+   so the type stays fluid and the cap still engages at the same ~1913px. The
+   2.75rem floor is left alone and is unreachable here anyway — 6.44vw is
+   already 66px at 1024. Phones and tablets are untouched. */
+@media (min-width: 1024px) {
+  :root {
+    --text-hero: clamp(2.75rem, 6.44vw, 7.7rem);
+  }
+}
+
 /* --------------------------------------------------------------------------
    HERO SCRIM
    The hero footage is a brightly-lit workshop whose specular highlights
@@ -452,6 +467,20 @@
   }
   to {
     transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Testimonial rail: THREE copies of the set, travelling exactly one copy.
+   Two copies (translate -50%) only loops seamlessly while a single copy is at
+   least as wide as the viewport — with four cards that breaks somewhere past
+   1850px and a gap opens on the right. Three copies moving -33.3333% needs only
+   copy-width ≥ viewport/2, which covers ultrawide. */
+@keyframes dgm-marquee-third {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-33.3333%, 0, 0);
   }
 }
 
