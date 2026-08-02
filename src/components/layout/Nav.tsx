@@ -141,7 +141,10 @@ export function Nav() {
       >
         <div className="h-px w-full bg-[var(--line)] opacity-0 transition-opacity duration-500 group-data-[stuck=true]/nav:opacity-100" />
 
-        <div className="shell flex items-center justify-between py-5 md:py-6">
+        {/* py-4 on phones, not py-5: the bar's height floor is the 44px burger
+            (the minimum comfortable touch target — it must not shrink), so the
+            only place left to reclaim vertical space is the padding. */}
+        <div className="shell flex items-center justify-between gap-3 py-4 md:py-6">
           <a
             href="#hero"
             onClick={(e) => {
@@ -152,7 +155,9 @@ export function Nav() {
             aria-label={`${site.name} — home`}
             className="relative z-10 block"
           >
-            <Logo priority width={260} className="h-7 w-auto md:h-8" />
+            {/* h-6 ≈ 93px wide at this artwork's 3.9:1 ratio — a quarter of a
+                360px screen rather than the 41% it was taking. */}
+            <Logo priority width={260} className="h-6 w-auto md:h-8" />
           </a>
 
           {/* --- desktop links --- */}
@@ -187,19 +192,26 @@ export function Nav() {
 
           <div className="flex items-center gap-2 md:gap-3">
 
-            <Magnetic strength={0.25} innerStrength={0.12} className="hidden sm:block">
+            {/* Kept on phones rather than hidden — this is a breakdown service
+                and the phone is exactly where a stranded driver needs it — but
+                shortened to "24/7", which stops it wrapping to two lines and
+                driving the whole bar's height. Full label from sm up. */}
+            <Magnetic strength={0.25} innerStrength={0.12}>
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor="link"
-                className="flex items-center gap-2.5 rounded-[var(--radius-pill)] border border-[var(--line-strong)] px-5 py-2.5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-[var(--fg)] transition-colors hover:border-[var(--color-red)] hover:text-[var(--accent-text)]"
+                aria-label="24/7 recovery — message us on WhatsApp"
+                className="flex items-center gap-2 whitespace-nowrap rounded-[var(--radius-pill)] border border-[var(--line-strong)] px-3.5 py-2.5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-[var(--fg)] transition-colors hover:border-[var(--color-red)] hover:text-[var(--accent-text)] sm:gap-2.5 sm:px-5 sm:tracking-[0.18em]"
               >
-                <span className="relative flex h-1.5 w-1.5">
+                <span className="relative flex h-1.5 w-1.5 shrink-0">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-red)] opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--color-red)]" />
                 </span>
-                24/7 Recovery
+                <span aria-hidden>
+                  24/7<span className="hidden sm:inline"> Recovery</span>
+                </span>
               </a>
             </Magnetic>
 

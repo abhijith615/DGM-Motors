@@ -118,7 +118,10 @@ export function Hero() {
           see .hero-scrim in globals.css. */}
       <div aria-hidden className="hero-scrim absolute inset-0" />
 
-      <div className="shell relative z-10 flex min-h-[100svh] flex-col justify-between pb-8 pt-24 md:pt-28">
+      {/* pt-32 on phones: the bar is ~77px tall there, so the previous pt-24
+          left only 27px of air between it and the eyebrow — the two read as one
+          crowded block. 128px gives ~51px of clear space. */}
+      <div className="shell relative z-10 flex min-h-[100svh] flex-col justify-between pb-8 pt-32 md:pt-28">
         <div data-hero-content>
           {/* --- eyebrow --- */}
           <div data-hero-fade className="mb-8 flex items-center gap-4 md:mb-12">
@@ -126,7 +129,7 @@ export function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-red)] opacity-70" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--color-red)]" />
             </span>
-            <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.24em] text-[var(--color-gray)] md:text-[11px]">
+            <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.24em] text-white/90 md:text-[11px]">
               {hero.eyebrow}
             </p>
           </div>
@@ -144,13 +147,17 @@ export function Hero() {
             </span>
           </h1>
 
-          {/* --color-chrome, not the old #8d9699: this line is pushed to the
-              right of the hero, which is both the brightest part of the footage
-              and where the scrim is lightest. The dimmer grey measured 1.97:1
-              there against the old WebGL backdrop's assumptions. */}
+          {/* Near-white, not a grey: this line is pushed to the right of the
+              hero, which is both the brightest part of the footage and where
+              the scrim is lightest. Every supporting element in this section is
+              now white-based for the same reason — with ~30% more of the video
+              showing through, grey text no longer clears AA against the
+              footage's bright frames. Hierarchy comes from size and tracking
+              instead of colour, which is the correct way to build it over
+              moving imagery. */}
           <p
             data-hero-fade
-            className="t-display mt-5 text-[clamp(0.95rem,1.85vw,1.9rem)] leading-none tracking-[-0.02em] text-[var(--color-chrome)] md:-mt-[0.35em] md:pl-[max(38%,22rem)]"
+            className="t-display mt-5 text-[clamp(0.95rem,1.85vw,1.9rem)] leading-none tracking-[-0.02em] text-white/85 md:-mt-[0.35em] md:pl-[max(38%,22rem)]"
           >
             Engineered to <span className="text-white">Perfection</span>
             <span className="text-[var(--color-red)]">.</span>
@@ -162,7 +169,7 @@ export function Hero() {
           <div className="grid-swiss mt-8 gap-y-10 md:mt-12">
             <p
               data-hero-fade
-              className="col-span-12 max-w-[62ch] text-lead text-[var(--color-gray)] md:col-span-6 lg:col-span-5"
+              className="col-span-12 max-w-[62ch] text-lead text-white/90 md:col-span-6 lg:col-span-5"
             >
               {hero.sub}
             </p>
@@ -208,7 +215,7 @@ function Marquee() {
       <div className="flex w-max animate-[dgm-marquee_38s_linear_infinite] items-center gap-8 will-change-transform hover:[animation-play-state:paused]">
         {items.map((item, i) => (
           <span key={i} className="flex shrink-0 items-center gap-8">
-            <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-gray)]">
+            <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-white/90">
               {item}
             </span>
             <span className="h-1 w-1 rotate-45 bg-[var(--color-red)]" />
@@ -227,7 +234,7 @@ function ScrollCue() {
       aria-label="Scroll to Engineering Excellence"
       className="group hidden shrink-0 items-center gap-3 md:flex"
     >
-      <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-gray)]">
+      <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-white/90">
         Scroll
       </span>
       <span className="relative block h-10 w-px overflow-hidden bg-white/15">

@@ -36,7 +36,10 @@ export function Logo({
       priority={priority}
       // Decorative-adjacent but it *is* the company name, so it stays in the
       // accessibility tree with a real alt.
-      className={cn('h-auto w-auto select-none object-contain', className)}
+      //
+      // No default h-*/w-* here: callers always set their own, and a base size
+      // that merely *loses* a specificity race is worse than none at all.
+      className={cn('select-none object-contain', className)}
       draggable={false}
     />
   );
